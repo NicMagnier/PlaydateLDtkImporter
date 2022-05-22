@@ -1,0 +1,5 @@
+name=LDtk Importer
+author=Nic Magnier
+description=Example for LDtk Importer
+bundleID=com.NicMagnier.LDtkImporter
+imagePath=
