@@ -482,6 +482,13 @@ function LDtk.get_empty_tileIDs( level_name, tileset_enum_value, layer_name )
 	return tileset.tileIDs_empty[ tileset_enum_value ]
 end
 
+-- return all layers from a level
+function LDtk.get_layers(level_name)
+	local level = _levels[level_name]
+
+	if not level then return end
+	return level.layers
+end
 
 --
 -- internal functions
