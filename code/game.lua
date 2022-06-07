@@ -20,12 +20,12 @@ function goto_level( level_name, direction )
 	playdate.graphics.sprite.removeAll()
 
 	layerSprites = {}
-	for index, layer in pairs(LDtk.get_layers(level_name)) do
+	for layer_name, layer in pairs(LDtk.get_layers(level_name)) do
 		if not layer.tiles then
 			goto continue
 		end
 
-		local tilemap = LDtk.create_tilemap(level_name, index)
+		local tilemap = LDtk.create_tilemap(level_name, layer_name)
 
 		local layerSprite = playdate.graphics.sprite.new()
 		layerSprite:setTilemap(tilemap)
@@ -33,9 +33,9 @@ function goto_level( level_name, direction )
 		layerSprite:setCenter(0, 0)
 		layerSprite:setZIndex(layer.zIndex)
 		layerSprite:add()
-		layerSprites[index] = layerSprite
+		layerSprites[layer_name] = layerSprite
 
-		local emptyTiles = LDtk.get_empty_tileIDs(level_name, "Solid", index)
+		local emptyTiles = LDtk.get_empty_tileIDs(level_name, "Solid", layer_name)
 
 		if emptyTiles then
 			playdate.graphics.sprite.addWallSprites(tilemap, emptyTiles)
@@ -58,9 +58,9 @@ function goto_level( level_name, direction )
 end
 
 function game.shutdown()
-	for index in pairs(LDtk.get_layers(game.level_name)) do
-        layerSprites[index]:remove()
-        layerSprites[index] = nil
+	for layer_name in pairs(LDtk.get_layers(game.level_name)) do
+        layerSprites[layer_name]:remove()
+        layerSprites[layer_name] = nil
     end
 
 	LDtk.release_level( game.level_name )
