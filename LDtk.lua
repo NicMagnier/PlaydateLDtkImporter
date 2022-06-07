@@ -261,6 +261,7 @@ function LDtk.load_level( level_name )
 
 	-- handle layers
 	level.layers = {}
+	local layer_count = #level_data.layerInstances
 	for layer_index, layer_data in ipairs(level_data.layerInstances) do
 
 		local layer = {}
@@ -269,7 +270,7 @@ function LDtk.load_level( level_name )
 		local layer_type = layer_data.__type
 
 		layer.grid_size = layer_data.__gridSize
-		layer.zIndex = layer_index
+		layer.zIndex = layer_count - layer_index
 		layer.rect = {
 			x = level_data.worldX + layer_data.__pxTotalOffsetX,
 			y = level_data.worldY + layer_data.__pxTotalOffsetY,
@@ -358,7 +359,7 @@ function LDtk.load_level( level_name )
 					position = { x=entity_data.px[1], y=entity_data.px[2] },
 					center = { x=entity_data.__pivot[1], y=entity_data.__pivot[2] },
 					size = { width=entity_data.width, height=entity_data.height },
-					zIndex = layer_index,
+					zIndex = layer.zIndex,
 					fields = properties,
 				})
 			end
@@ -482,6 +483,13 @@ function LDtk.get_empty_tileIDs( level_name, tileset_enum_value, layer_name )
 	return tileset.tileIDs_empty[ tileset_enum_value ]
 end
 
+-- return all layers from a level
+function LDtk.get_layers(level_name)
+	local level = _levels[level_name]
+
+	if not level then return end
+	return level.layers
+end
 
 --
 -- internal functions
