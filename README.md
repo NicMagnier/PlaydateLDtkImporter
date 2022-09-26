@@ -1,7 +1,27 @@
 # PlaydateLDtkImporter
+
+[![Lua Version](https://img.shields.io/badge/Lua-5.4-yellowgreen)](https://lua.org) [![Toybox Compatible](https://img.shields.io/badge/toybox.py-compatible-brightgreen)](https://toyboxpy.io) [![Latest Version](https://img.shields.io/github/v/tag/NicMagnier/PlaydateLDtkImporter)](https://github.com/NicMagnier/PlaydateLDtkImporter/tags)
+
  Load tilemaps created with LDtk in playdate games
 
 ## How to use LDtk levels on Playdate
+
+#### Using toybox.py
+
+You can add it to your **Playdate** project by installing [**toybox.py**](https://toyboxpy.io), going to your project folder in a Terminal window and typing:
+
+```console
+toybox add NicMagnier/PlaydateLDtkImporter
+toybox update
+```
+
+Then, if your code is in the `source` folder, just import the following:
+
+```lua
+import '../toyboxes/toyboxes.lua'
+```
+
+#### Manually
 
 You first need to copy the file `Ldtk.lua` in your playdate project and to import it
 
