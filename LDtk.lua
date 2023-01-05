@@ -176,7 +176,7 @@ function LDtk.load( ldtk_file, use_lua_levels )
 
 	-- we list the level names (the complete list needs to be ready before calling LDtk.load_level())
 	for level_index, level_data in ipairs(data.levels) do
-		_level_names[ level_data.uid ] = level_data.identifier
+		_level_names[ level_data.iid ] = level_data.identifier
 		_level_rects[ level_data.identifier ] = { x=level_data.worldX, y=level_data.worldY, width=level_data.pxWid, height=level_data.pxHei }
 	end
 
@@ -255,7 +255,7 @@ function LDtk.load_level( level_name )
 	for index, neighbour_data in ipairs(level_data.__neighbours) do
 		local direction = direction_table[ neighbour_data.dir ]
 		if direction then
-			table.insert( level.neighbours[ direction ], _level_names[ neighbour_data.levelUid ])
+			table.insert( level.neighbours[ direction ], _level_names[ neighbour_data.levelIid ])
 		end
 	end
 
