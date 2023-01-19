@@ -623,7 +623,11 @@ function _.export_lua_table( filepath, table_to_export )
 				end
 			else
 				for key, value in pairs(entry) do
-					file:write("[\""..tostring(key).."\"]=")
+					if type(key) == "number" then
+						file:write("["..tostring(key).."]=")
+					else
+						file:write("[\""..tostring(key).."\"]=")
+					end
 					_write_entry(value, key)
 					file:write(",")
 				end
