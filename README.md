@@ -31,7 +31,7 @@ import 'LDtk'
 
 Next you need to load your main .ldtk file, typically during the game loading
 ```lua
-Ldtk.load( "MyWorld.ldtk" )
+LDtk.load( "MyWorld.ldtk" )
 ```
 
 If your LDtk world is saved in multiple files (in this case you see a .ldtkl file for each level in your structure) you need to manually load the levels.
