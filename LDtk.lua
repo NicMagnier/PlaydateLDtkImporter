@@ -85,7 +85,7 @@ function LDtk.load( ldtk_file, use_lua_levels )
 		if not _use_external_files then
 			for level_name in pairs(_levels) do
 				_.load_tileset( level_name )
-			end	
+			end
 		end
 		return
 	end
@@ -96,7 +96,7 @@ function LDtk.load( ldtk_file, use_lua_levels )
 
 	-- handle the tilesets
 	for tileset_index, tileset_data in ipairs(data.defs.tilesets) do
-		-- check if the image table is in the folder of the ldtk file
+        -- check if the image table is in the folder of the ldtk file
 		if string.byte(".", 1)==string.byte(tileset_data.relPath, 1) then
 			error( "Cannot load tileset used by LDtk levels. imageTable tilesets must be in the same folder as ldtk file.", 2)
 			return
@@ -149,7 +149,7 @@ function LDtk.load( ldtk_file, use_lua_levels )
 				registered_tileIDs_flipped[ tileID_flip_y ] = true
 				registered_tileIDs_flipped[ tileID_flip_xy ] = true
 			end
-			
+
 			-- empty versions
 			local tileIDs_empty = {}
 			for tileID = 1, cw*ch do
@@ -188,7 +188,7 @@ function LDtk.load( ldtk_file, use_lua_levels )
 			LDtk.load_level( level_data )
 			_.load_tileset( level_data.identifier )
 		end
-	end	
+	end
 end
 
 -- Call this function to save the LDtk level in lua files to improve loading performance
@@ -298,7 +298,7 @@ function LDtk.load_level( level_name )
 			local gsize = layer.grid_size
 			local tileset_data = _tilesets[ layer.tileset_uid ]
 			local cw, ch = tileset_data.imageWidth/gsize, tileset_data.imageHeight/gsize
-			
+
 			-- check we we have any flipped tiles
 			for tile_index, tile_data in ipairs(tiles_data) do
 				if tile_data.f~=0 then
@@ -355,7 +355,8 @@ function LDtk.load_level( level_name )
 				end
 
 				table.insert( layer.entities, {
-					name = entity_data.__identifier,
+                    name = entity_data.__identifier,
+					iid = entity_data.iid,
 					position = { x=entity_data.px[1], y=entity_data.px[2] },
 					center = { x=entity_data.__pivot[1], y=entity_data.__pivot[2] },
 					size = { width=entity_data.width, height=entity_data.height },
@@ -404,7 +405,7 @@ function LDtk.get_entities( level_name, layer_name )
 	if not layer_name then
 		local all_entities = {}
 		for layer_name, layer in pairs(level.layers) do
-			for entity_index, entity in pairs(layer.entities or {}) do
+            for entity_index, entity in pairs(layer.entities or {}) do
 				table.insert( all_entities, entity)
 			end
 		end
@@ -453,7 +454,7 @@ end
 -- return all the tileIDs tagged in LDtk with tileset_enum_value
 -- LDtk.get_tileIDs( "Level_0", "Solid" )
 function LDtk.get_tileIDs( level_name, tileset_enum_value, layer_name )
-	local layer = _.get_tile_layer( level_name, layer_name )
+    local layer = _.get_tile_layer( level_name, layer_name )
 	if not layer then return end
 
 	local tileset = _tilesets[ layer.tileset_uid ]
