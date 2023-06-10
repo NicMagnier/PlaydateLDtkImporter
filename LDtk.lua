@@ -258,6 +258,12 @@ function LDtk.load_level( level_name )
 			table.insert( level.neighbours[ direction ], _level_names[ neighbour_data.levelIid ])
 		end
 	end
+		
+	-- load level's custom fields
+	for index, field_data in ipairs(level_data.fieldInstances) do
+		level.customData = {}
+		level.customData[ field_data.__identifier ] = field_data.__value
+	end
 
 	-- handle layers
 	level.layers = {}
@@ -449,6 +455,12 @@ end
 -- always available, the level doesn't need to be loaded
 function LDtk.get_rect( level_name )
 	return _level_rects[level_name]
+end
+
+-- return custom data for the specified level 
+-- LDtk.get_customData( "Level_0" )
+function LDtk.get_customData( level_name )
+	return _levels[level_name].customData 
 end
 
 -- return all the tileIDs tagged in LDtk with tileset_enum_value
