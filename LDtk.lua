@@ -357,6 +357,7 @@ function LDtk.load_level( level_name )
 				table.insert( layer.entities, {
 					name = entity_data.__identifier,
 					iid = entity_data.iid,
+					tile = entity_data.__tile,
 					position = { x=entity_data.px[1], y=entity_data.px[2] },
 					center = { x=entity_data.__pivot[1], y=entity_data.__pivot[2] },
 					size = { width=entity_data.width, height=entity_data.height },
