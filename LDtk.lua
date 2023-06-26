@@ -460,11 +460,21 @@ end
 -- return custom data for the specified level 
 -- @field_name is optional, if nil then it will return all the fields as a table
 function LDtk.get_custom_data( level_name, field_name )
-	if field_name then
-		return _levels[ level_name ].custom_data[ field_name ]
+	local level = _levels[ level_name ]
+	if not level then
+		return nil
 	end
 
-	return _levels[ level_name ].custom_data
+	local custom_data = level.custom_data
+	if not custom_data then
+		return nil
+	end
+
+	if field_name then
+		return custom_data[ field_name ]
+	end
+
+	return custom_data
 end
 
 -- return all the tileIDs tagged in LDtk with tileset_enum_value
