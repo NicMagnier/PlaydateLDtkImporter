@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"identifier": "Level_0",
-	"iid": "8452cdf0-ed50-11ed-96ba-d996f5ef895f",
+	"iid": "c360fb40-1460-11ee-831c-ade3f9921719",
 	"uid": 0,
 	"worldX": 0,
 	"worldY": 0,
@@ -39,7 +39,7 @@
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": null,
 			"__tilesetRelPath": null,
-			"iid": "8452f500-ed50-11ed-96ba-c5ac6cb8ca33",
+			"iid": "c3612252-1460-11ee-831c-e927df2db835",
 			"levelId": 0,
 			"layerDefUid": 5,
 			"pxOffsetX": 0,
@@ -59,7 +59,7 @@
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#94D9B3",
-					"iid": "8452f501-ed50-11ed-96ba-bbe30651a03c",
+					"iid": "c3612253-1460-11ee-831c-e7d073d3eba8",
 					"width": 16,
 					"height": 32,
 					"defUid": 2,
@@ -73,7 +73,7 @@
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#94D9B3",
-					"iid": "8452f502-ed50-11ed-96ba-4901afeef5f8",
+					"iid": "c3612254-1460-11ee-831c-1bf6ab8bf41d",
 					"width": 16,
 					"height": 32,
 					"defUid": 2,
@@ -82,6 +82,62 @@
 						"id": "V_String",
 						"params": ["West"]
 					}] }]
+				},
+				{
+					"__identifier": "Mushroom",
+					"__grid": [9,7],
+					"__pivot": [0,0],
+					"__tags": [],
+					"__tile": { "tilesetUid": 1, "x": 40, "y": 24, "w": 8, "h": 8 },
+					"__smartColor": "#BE4A2F",
+					"iid": "74f871d0-1460-11ee-831c-1b0d6e7cd621",
+					"width": 8,
+					"height": 8,
+					"defUid": 54,
+					"px": [76,56],
+					"fieldInstances": []
+				},
+				{
+					"__identifier": "Mushroom",
+					"__grid": [9,5],
+					"__pivot": [0,0],
+					"__tags": [],
+					"__tile": { "tilesetUid": 1, "x": 40, "y": 24, "w": 8, "h": 8 },
+					"__smartColor": "#BE4A2F",
+					"iid": "762977c0-1460-11ee-831c-4b026157c41a",
+					"width": 8,
+					"height": 8,
+					"defUid": 54,
+					"px": [78,47],
+					"fieldInstances": []
+				},
+				{
+					"__identifier": "Mushroom",
+					"__grid": [9,4],
+					"__pivot": [0,0],
+					"__tags": [],
+					"__tile": { "tilesetUid": 1, "x": 40, "y": 24, "w": 8, "h": 8 },
+					"__smartColor": "#BE4A2F",
+					"iid": "79527d20-1460-11ee-831c-4bac79a924dd",
+					"width": 8,
+					"height": 8,
+					"defUid": 54,
+					"px": [77,38],
+					"fieldInstances": []
+				},
+				{
+					"__identifier": "Mushroom",
+					"__grid": [9,3],
+					"__pivot": [0,0],
+					"__tags": [],
+					"__tile": { "tilesetUid": 1, "x": 40, "y": 24, "w": 8, "h": 8 },
+					"__smartColor": "#BE4A2F",
+					"iid": "7abbaa10-1460-11ee-831c-1f27cb206177",
+					"width": 8,
+					"height": 8,
+					"defUid": 54,
+					"px": [75,29],
+					"fieldInstances": []
 				}
 			]
 		},
@@ -96,7 +152,7 @@
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": 1,
 			"__tilesetRelPath": "tilesets/bw_tiles-table-8-8.png",
-			"iid": "8452f503-ed50-11ed-96ba-a9c56d61150e",
+			"iid": "c3612255-1460-11ee-831c-8dcf7afd0e77",
 			"levelId": 0,
 			"layerDefUid": 7,
 			"pxOffsetX": 0,
@@ -122,7 +178,7 @@
 				2,2,2,2,2,2,2,2,2,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,
 				0,5,0,0,3,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,3,5,0,0,0,0,0,0,0,
 				0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,5,0,0,3,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,
-				2,2,2,2,0,0,3,5,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,5,0,0,3,
+				2,2,2,2,0,0,3,5,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,5,0,0,0,
 				0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,
 				1,1,0,0,0,0,0,0,0,0,0,5,0,0,3,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,2,2,2,2,0,
 				0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,5,0,0,3,0,0,0,0,0,
@@ -1659,5 +1715,5 @@
 			"entityInstances": []
 		}
 	],
-	"__neighbours": [{ "levelIid": "845788e0-ed50-11ed-96ba-19bfa3a242d8", "dir": "e" }]
+	"__neighbours": [{ "levelIid": "c3654100-1460-11ee-831c-0337e0895d09", "dir": "e" }]
 }

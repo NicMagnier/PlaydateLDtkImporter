@@ -364,6 +364,7 @@ function LDtk.load_level( level_name )
 				table.insert( layer.entities, {
 					name = entity_data.__identifier,
 					iid = entity_data.iid,
+					tileset_rect = entity_data.__tile,
 					position = { x=entity_data.px[1], y=entity_data.px[2] },
 					center = { x=entity_data.__pivot[1], y=entity_data.__pivot[2] },
 					size = { width=entity_data.width, height=entity_data.height },
@@ -517,6 +518,55 @@ function LDtk.get_layers(level_name)
 
 	if not level then return end
 	return level.layers
+end
+
+
+-- Generate an image from a section of a tileset
+-- https://ldtk.io/json/#ldtk-TilesetRect
+-- You can use it as custom property
+function LDtk.generate_image_from_tileset_rect( tileset_rect )
+	if not tileset_rect then
+		return nil
+	end
+
+	-- Load tileset
+	local tileset = _tilesets[ tileset_rect.tilesetUid ]
+	if not tileset then
+		return nil
+	end
+	local cells = _.load_tileset_imagetable( tileset.imageTable_filename )
+	local cell_width, cell_height = cells[1]:getSize()
+	local x_count = math.ceil( tileset_rect.w/cell_width )
+	local y_count = math.ceil( tileset_rect.h/cell_height )
+
+	local entity_image = playdate.graphics.image.new(tileset_rect.w, tileset_rect.h)
+
+	playdate.graphics.lockFocus( entity_image )
+		for y = 0, y_count-1 do
+			for x = 0, x_count-1 do
+				cells:getImage( 1 + (tileset_rect.x//cell_width) + x, 1 + (tileset_rect.y//cell_height) + y ):draw( x*cell_width, y*cell_height )
+			end
+		end
+	playdate.graphics.unlockFocus()
+
+	_.release_tileset_imagetable( tileset.imageTable_filename )
+
+	return entity_image
+end
+
+-- Generate an image of an entity
+-- The entity needs to have the 'Editor Visual' property set to a tileset in LDtk
+function LDtk.generate_image_from_entity( entity )
+	if not entity then
+		return nil
+	end
+
+	if not entity.tileset_rect then
+		print("LDtk: Cannot generate entity image. No tileset assigned to it.")
+		return
+	end
+
+	return LDtk.generate_image_from_tileset_rect( entity.tileset_rect )
 end
 
 --

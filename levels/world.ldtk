@@ -8,10 +8,10 @@
 		"appVersion": "1.3.3",
 		"url": "https://ldtk.io"
 	},
-	"iid": "844698f0-ed50-11ed-96ba-e57c140a9248",
+	"iid": "c351e010-1460-11ee-831c-d1aad17849aa",
 	"jsonVersion": "1.3.3",
 	"appBuildId": 467698,
-	"nextUid": 54,
+	"nextUid": 56,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "Free",
@@ -961,6 +961,39 @@
 					"tilesetUid": null
 				}
 			]
+		},
+		{
+			"identifier": "Mushroom",
+			"uid": 54,
+			"tags": [],
+			"exportToToc": false,
+			"doc": null,
+			"width": 8,
+			"height": 8,
+			"resizableX": false,
+			"resizableY": false,
+			"minWidth": null,
+			"maxWidth": null,
+			"minHeight": null,
+			"maxHeight": null,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 0.08,
+			"lineOpacity": 0,
+			"hollow": false,
+			"color": "#BE4A2F",
+			"renderMode": "Tile",
+			"showName": true,
+			"tilesetId": 1,
+			"tileRenderMode": "FitInside",
+			"tileRect": { "tilesetUid": 1, "x": 40, "y": 24, "w": 8, "h": 8 },
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0,
+			"pivotY": 0,
+			"fieldDefs": []
 		}
 	], "tilesets": [
 		{
@@ -1000,7 +1033,7 @@
 	"levels": [
 		{
 			"identifier": "Level_0",
-			"iid": "8452cdf0-ed50-11ed-96ba-d996f5ef895f",
+			"iid": "c360fb40-1460-11ee-831c-ade3f9921719",
 			"uid": 0,
 			"worldX": 0,
 			"worldY": 0,
@@ -1019,11 +1052,11 @@
 			"externalRelPath": "world/0000-Level_0.ldtkl",
 			"fieldInstances": [],
 			"layerInstances": null,
-			"__neighbours": [{ "levelIid": "845788e0-ed50-11ed-96ba-19bfa3a242d8", "dir": "e" }]
+			"__neighbours": [{ "levelIid": "c3654100-1460-11ee-831c-0337e0895d09", "dir": "e" }]
 		},
 		{
 			"identifier": "Level_1",
-			"iid": "845788e0-ed50-11ed-96ba-19bfa3a242d8",
+			"iid": "c3654100-1460-11ee-831c-0337e0895d09",
 			"uid": 6,
 			"worldX": 400,
 			"worldY": -88,
@@ -1042,11 +1075,11 @@
 			"externalRelPath": "world/0001-Level_1.ldtkl",
 			"fieldInstances": [],
 			"layerInstances": null,
-			"__neighbours": [{ "levelIid": "8452cdf0-ed50-11ed-96ba-d996f5ef895f", "dir": "w" }]
+			"__neighbours": [{ "levelIid": "c360fb40-1460-11ee-831c-ade3f9921719", "dir": "w" }]
 		},
 		{
 			"identifier": "Level_2",
-			"iid": "845abd30-ed50-11ed-96ba-ff31901e903a",
+			"iid": "c36763e0-1460-11ee-831c-55cd15e44f32",
 			"uid": 53,
 			"worldX": 0,
 			"worldY": 296,
@@ -1069,5 +1102,5 @@
 		}
 	],
 	"worlds": [],
-	"dummyWorldIid": "84478350-ed50-11ed-96ba-75baa1a083be"
+	"dummyWorldIid": "c352ca70-1460-11ee-831c-cbdd0302c76e"
 }

@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"identifier": "Level_1",
-	"iid": "845788e0-ed50-11ed-96ba-19bfa3a242d8",
+	"iid": "c3654100-1460-11ee-831c-0337e0895d09",
 	"uid": 6,
 	"worldX": 400,
 	"worldY": -88,
@@ -39,7 +39,7 @@
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": null,
 			"__tilesetRelPath": null,
-			"iid": "84584c30-ed50-11ed-96ba-3da4e2d79310",
+			"iid": "c3654103-1460-11ee-831c-7bf7afb94aa3",
 			"levelId": 6,
 			"layerDefUid": 5,
 			"pxOffsetX": 0,
@@ -59,7 +59,7 @@
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#94D9B3",
-					"iid": "84584c31-ed50-11ed-96ba-930493d5318c",
+					"iid": "c3654104-1460-11ee-831c-0928e27a792f",
 					"width": 16,
 					"height": 32,
 					"defUid": 2,
@@ -73,7 +73,7 @@
 					"__tags": [],
 					"__tile": null,
 					"__smartColor": "#94D9B3",
-					"iid": "84584c32-ed50-11ed-96ba-2b9da698c6f4",
+					"iid": "c3654105-1460-11ee-831c-95de86a44fbb",
 					"width": 16,
 					"height": 32,
 					"defUid": 2,
@@ -96,7 +96,7 @@
 			"__pxTotalOffsetY": 0,
 			"__tilesetDefUid": 1,
 			"__tilesetRelPath": "tilesets/bw_tiles-table-8-8.png",
-			"iid": "84587340-ed50-11ed-96ba-4b9b16982608",
+			"iid": "c3654106-1460-11ee-831c-3555dfdc57d0",
 			"levelId": 6,
 			"layerDefUid": 7,
 			"pxOffsetX": 0,
@@ -1656,5 +1656,5 @@
 			"entityInstances": []
 		}
 	],
-	"__neighbours": [{ "levelIid": "8452cdf0-ed50-11ed-96ba-d996f5ef895f", "dir": "w" }]
+	"__neighbours": [{ "levelIid": "c360fb40-1460-11ee-831c-ade3f9921719", "dir": "w" }]
 }
