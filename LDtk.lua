@@ -39,6 +39,7 @@ LDtk = {}
 
 local _ldtk_filepath = nil
 local _ldtk_folder = nil
+local _ldtk_folder_table = nil
 local _ldtk_lua_folder = nil
 
 local _level_files = {}
@@ -60,6 +61,7 @@ local _ = {} -- for private functions
 function LDtk.load( ldtk_file, use_lua_levels )
 	_ldtk_filepath = ldtk_file
 	_ldtk_folder = _.get_folder( ldtk_file )
+	_ldtk_folder_table = _.get_folder_table( _ldtk_folder )
 	_ldtk_lua_folder = _ldtk_folder.."LDtk_lua_levels/"
 
 	local lua_filename = _ldtk_lua_folder.._.get_filename( ldtk_file )..".pdz"
@@ -96,18 +98,11 @@ function LDtk.load( ldtk_file, use_lua_levels )
 
 	-- handle the tilesets
 	for tileset_index, tileset_data in ipairs(data.defs.tilesets) do
-		-- check if the image table is in the folder of the ldtk file
-		-- The playdate device cannot resolve path like "ldtk_folder/../other_folder"
-		if string.byte(".", 1)==string.byte(tileset_data.relPath, 1) then
-			error( "Cannot load tileset used by LDtk levels. imageTable tilesets must be in the same folder as ldtk file.", 2)
-			return
-		end
-
 		local tileset = {}
 
 		_tilesets[ tileset_data.uid ] = tileset
 
-		tileset.imageTable_filename = tileset_data.relPath
+		tileset.imageTable_filename = _.convert_relative_folder( tileset_data.relPath )
 		tileset.imageWidth = tileset_data.pxWid
 		tileset.imageHeight = tileset_data.pxHei
 
@@ -184,7 +179,7 @@ function LDtk.load( ldtk_file, use_lua_levels )
 	-- we load the levels
 	for level_index, level_data in ipairs(data.levels) do
 		if level_data.externalRelPath then
-			_level_files[ level_data.identifier ] = level_data.externalRelPath
+			_level_files[ level_data.identifier ] = _.convert_relative_folder( level_data.externalRelPath )
 		else
 			LDtk.load_level( level_data )
 			_.load_tileset( level_data.identifier )
@@ -243,7 +238,7 @@ function LDtk.load_level( level_name )
 
 	local level_data
 	if type(level_name)=="string" then
-		level_data = json.decodeFile( _ldtk_folder.._level_files[ level_name ] )
+		level_data = json.decodeFile( _level_files[ level_name ] )
 	else
 		level_data = level_name
 	end
@@ -287,7 +282,7 @@ function LDtk.load_level( level_name )
 
 		-- load tileset
 		if layer_data.__tilesetRelPath then
-			layer.tileset_file = layer_data.__tilesetRelPath
+			layer.tileset_file = _.convert_relative_folder( layer_data.__tilesetRelPath )
 		end
 		layer.has_flipped_tiles = false
 
@@ -582,6 +577,71 @@ function _.get_folder( filepath )
 	return filepath:sub(0, -#filename-1)
 end
 
+
+function _.get_folder_table( path )
+	local delimiter = '/'
+	local result = {}
+	local string_index = 1
+	local folder
+
+	local found_start, found_end = string.find( path, delimiter, string_index)
+	while found_start do
+		folder = string.sub( path, string_index , found_start-1 )
+		if type(folder)=="string" and string.len(folder)>0 then
+			table.insert(result, folder)
+		end
+
+		string_index = found_end + 1
+		found_start, found_end = string.find( path, delimiter, string_index)
+	end
+
+	folder = string.sub( path, string_index)
+	if type(folder)=="string" and string.len(folder)>0 then
+		table.insert(result, folder)
+	end
+
+	return result
+end
+
+function _.convert_relative_folder( filepath )
+	local ldtk_folder_end = #_ldtk_folder_table
+	local relative_path_start = 1
+
+	local relative_path_table = _.get_folder_table( filepath )
+	for index, relative_folder in ipairs(relative_path_table) do
+		if relative_folder==".." then
+			ldtk_folder_end = ldtk_folder_end - 1
+		elseif relative_folder~="." then
+			goto skip_folders
+		end
+
+		relative_path_start = relative_path_start + 1
+	end
+	::skip_folders::
+
+	if ldtk_folder_end<0 then
+		error( "LDtk cannot access the following path because it is outside the project folder: "..filepath)
+	end
+
+	local absolute_path
+	for index = 1, ldtk_folder_end do
+		if absolute_path then
+			absolute_path = absolute_path.."/".._ldtk_folder_table[ index ]
+		else
+			absolute_path = _ldtk_folder_table[ index ]
+		end
+	end
+	for index = relative_path_start, #relative_path_table do
+		if absolute_path then
+			absolute_path = absolute_path.."/"..relative_path_table[ index ]
+		else
+			absolute_path = relative_path_table[ index ]
+		end
+	end
+
+	return absolute_path
+end
+
 function _.load_tileset( level_name )
 	local level = _levels[level_name]
 	if not level then return end
@@ -608,9 +668,9 @@ function _.load_tileset_imagetable(path, flipped)
 	if flipped then
 		local filename = path:match("^.+/(.+)$")
 		local tileset_folder = path:sub(0, -#filename-1)
-		image_filepath = _ldtk_folder..tileset_folder.."flipped-"..filename
+		image_filepath = tileset_folder.."flipped-"..filename
 	else
-		image_filepath = _ldtk_folder..path
+		image_filepath = path
 	end
 
 	local image = playdate.graphics.imagetable.new(image_filepath)
