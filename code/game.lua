@@ -1,8 +1,5 @@
 game = {}
 
-local layerSprites = {}
-local _background_sprite = playdate.graphics.sprite.new()
-
 function game.init( level_name )
 	goto_level( level_name )
 end
@@ -19,7 +16,6 @@ function goto_level( level_name, direction )
 	LDtk.release_level( previous_level )
 	playdate.graphics.sprite.removeAll()
 
-	layerSprites = {}
 	for layer_name, layer in pairs(LDtk.get_layers(level_name)) do
 		if not layer.tiles then
 			goto continue
@@ -33,7 +29,6 @@ function goto_level( level_name, direction )
 		layerSprite:setCenter(0, 0)
 		layerSprite:setZIndex(layer.zIndex)
 		layerSprite:add()
-		layerSprites[layer_name] = layerSprite
 
 		local emptyTiles = LDtk.get_empty_tileIDs(level_name, "Solid", layer_name)
 
@@ -50,6 +45,14 @@ function goto_level( level_name, direction )
 				player.sprite:add()
 				player.init( entity )
 			end
+		else
+			local entity_image = LDtk.generate_image_from_entity(entity)
+			if entity_image then
+				local new_deco_sprite = playdate.graphics.sprite.new( entity_image )
+				new_deco_sprite:moveTo( entity.position.x, entity.position.y )
+				new_deco_sprite:setCenter(0,0)
+				new_deco_sprite:add()
+			end
 		end
 	end
 
@@ -58,10 +61,12 @@ function goto_level( level_name, direction )
 end
 
 function game.shutdown()
-	for layer_name in pairs(LDtk.get_layers(game.level_name)) do
-        layerSprites[layer_name]:remove()
-        layerSprites[layer_name] = nil
-    end
+	local sprites = playdate.graphics.sprite.getAllSprites()
+	for sprite_index, sprite in pairs(sprites) do
+		if sprite~=player.sprite then
+			sprite:remove()
+		end
+	end
 
 	LDtk.release_level( game.level_name )
 end
