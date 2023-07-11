@@ -42,6 +42,8 @@ local _ldtk_folder = nil
 local _ldtk_folder_table = nil
 local _ldtk_lua_folder = nil
 
+local _ldtk_lua_foldername = "LDtk_lua_levels"
+
 local _level_files = {}
 local _levels = {}
 local _level_names = {} -- uids to name
@@ -62,19 +64,19 @@ function LDtk.load( ldtk_file, use_lua_levels )
 	_ldtk_filepath = ldtk_file
 	_ldtk_folder = _.get_folder( ldtk_file )
 	_ldtk_folder_table = _.get_folder_table( _ldtk_folder )
-	_ldtk_lua_folder = _ldtk_folder.."LDtk_lua_levels/"
+	_ldtk_lua_folder = _ldtk_folder.._ldtk_lua_foldername
 
 	local lua_filename = _ldtk_lua_folder.._.get_filename( ldtk_file )..".pdz"
 
 	-- check if we should load the lua files instead of the json files
 	_use_lua_levels = use_lua_levels
-	if _use_lua_levels==nil then
+	if _use_lua_levels then
 		_use_lua_levels = playdate.file.exists( lua_filename )
 	end
 
 	-- simply load the level from the precomputed lua file
 	if _use_lua_levels then
-		print("LDtk loader will use lua precomputed levels.")
+		print("LDtk Importer will use lua precomputed levels.")
 		local data = playdate.file.run( lua_filename )
 
 		_tilesets = data.tilesets
@@ -195,8 +197,8 @@ function LDtk.export_to_lua_files()
 		return
 	end
 
-	local folder = "LDtk_lua_levels/"
-	playdate.file.mkdir(folder)
+	local folder = _ldtk_lua_foldername.."/"
+	playdate.file.mkdir(_ldtk_lua_foldername)
 
 	local lua_level_files = {}
 	for level_name, level_file in pairs(_level_files) do
@@ -639,6 +641,7 @@ function _.convert_relative_folder( filepath )
 		end
 	end
 
+	print(absolute_path)
 	return absolute_path
 end
 

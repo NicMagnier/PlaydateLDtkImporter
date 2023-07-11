@@ -11,16 +11,26 @@ import 'code/approach'
 
 playdate.display.setRefreshRate(30)
 
--- we will try to load precomputed files only on the playdate itself to increase load speed
-local use_ldtk_precomputed_levels = not playdate.isSimulator
+local use_ldtk_fastloading = true
 
--- Load the LDtk main file
-LDtk.load( "levels/world.ldtk", use_ldtk_precomputed_levels )
+-- simplest method is just to load the levels as is
+-- this method should be fine for most cases
+if not use_ldtk_fastloading then
+	LDtk.load( "levels/world.ldtk" )
 
--- if we run in the simulator, we export the level to the save directory.
-if playdate.isSimulator then
-	LDtk.export_to_lua_files()
+-- To speed up loading times, you can export you levels as lua files and load them precompiled
+else
+	if playdate.isSimulator then
+		-- In the simulator, we load the ldtk file and export the levels as lua files
+		-- You need to copy the lua files in your project
+		LDtk.load( "levels/world.ldtk" )
+		LDtk.export_to_lua_files()
+	else
+		-- On device, we tell the library to load using the lua files
+		LDtk.load( "levels/world.ldtk", use_ldtk_fastloading )
+	end
 end
+
 
 player.create()
 game.init( "Level_0" )
