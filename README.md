@@ -73,3 +73,12 @@ for index, entity in ipairs( LDtk.get_entities( "TheFirstLevel" ) ) do
 	end
 end
 ```
+
+### Changelog
+
+#### version 1.02
+- Make it possible to have the ldtk file at the root of the project
+
+#### version 1.01
+- Make it possible to use tileset that are in any folder of the project, not just under the ldtk file
+- Added function to generate image from a tileset rect

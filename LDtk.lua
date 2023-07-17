@@ -1,3 +1,5 @@
+-- version 1.02
+--
 -- Read levels made with LDtk level editor
 -- More information about LDtk: https://ldtk.io/
 --
@@ -39,6 +41,7 @@ LDtk = {}
 
 local _ldtk_filepath = nil
 local _ldtk_folder = nil
+local _ldtk_filename = nil
 local _ldtk_folder_table = nil
 local _ldtk_lua_folder = nil
 
@@ -62,11 +65,11 @@ local _ = {} -- for private functions
 --	nil: will load lua files if they exist
 function LDtk.load( ldtk_file, use_lua_levels )
 	_ldtk_filepath = ldtk_file
-	_ldtk_folder = _.get_folder( ldtk_file )
+	_ldtk_folder, _ldtk_filename = _.get_folder_and_filename( ldtk_file )
 	_ldtk_folder_table = _.get_folder_table( _ldtk_folder )
 	_ldtk_lua_folder = _ldtk_folder.._ldtk_lua_foldername
 
-	local lua_filename = _ldtk_lua_folder.._.get_filename( ldtk_file )..".pdz"
+	local lua_filename = _ldtk_lua_folder.._ldtk_filename..".pdz"
 
 	-- check if we should load the lua files instead of the json files
 	_use_lua_levels = use_lua_levels
@@ -207,7 +210,7 @@ function LDtk.export_to_lua_files()
 	end
 
 	print("Export LDtk world")
-	_.export_lua_table( folder.._.get_filename(_ldtk_filepath)..".lua", {
+	_.export_lua_table( folder.._ldtk_filename..".lua", {
 		tilesets = _tilesets,
 		level_files = lua_level_files,
 		level_names = _level_names,
@@ -570,13 +573,19 @@ end
 -- internal functions
 --
 
+function _.get_folder_and_filename( filepath )
+	local folder, filename, extension = filepath:match("(.-)([^/.]-).([^.]+)$")
+	return folder, filename
+end
+
 function _.get_filename( filepath )
-	return filepath:match("^.+/(.+)$")
+	local folder, filename = _.get_folder_and_filename( filepath )
+	return filename
 end
 
 function _.get_folder( filepath )
-	local filename = filepath:match("^.+/(.+)$")
-	return filepath:sub(0, -#filename-1)
+	local folder, filename = _.get_folder_and_filename( filepath )
+	return folder
 end
 
 
