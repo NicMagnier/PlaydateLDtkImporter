@@ -256,7 +256,7 @@ function LDtk.load_level( level_name )
 			table.insert( level.neighbours[ direction ], _level_names[ neighbour_data.levelIid ])
 		end
 	end
-		
+
 	-- load level's custom fields
 	for index, field_data in ipairs(level_data.fieldInstances) do
 		level.custom_data = {}
@@ -421,7 +421,7 @@ function LDtk.get_entities( level_name, layer_name )
 	local layer = level.layers[ layer_name ]
 	if not layer then return end
 
-	return layer.entities
+	return layer.entities or {}
 end
 
 -- return a tilemap for the level
@@ -456,7 +456,7 @@ function LDtk.get_rect( level_name )
 	return _level_rects[ level_name ]
 end
 
--- return custom data for the specified level 
+-- return custom data for the specified level
 -- @field_name is optional, if nil then it will return all the fields as a table
 function LDtk.get_custom_data( level_name, field_name )
 	local level = _levels[ level_name ]
