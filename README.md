@@ -76,6 +76,9 @@ end
 
 ### Changelog
 
+#### version 1.03
+- Fix crash when the LDtk internal icons are used in a level
+
 #### version 1.02
 - Make it possible to have the ldtk file at the root of the project
 

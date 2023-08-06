@@ -1,4 +1,4 @@
--- version 1.02
+-- version 1.03
 --
 -- Read levels made with LDtk level editor
 -- More information about LDtk: https://ldtk.io/
@@ -538,7 +538,7 @@ function LDtk.generate_image_from_tileset_rect( tileset_rect )
 	if not cells then
 		return nil
 	end
-	
+
 	local cell_width, cell_height = cells[1]:getSize()
 	local x_count = math.ceil( tileset_rect.w/cell_width )
 	local y_count = math.ceil( tileset_rect.h/cell_height )
