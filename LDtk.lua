@@ -535,6 +535,10 @@ function LDtk.generate_image_from_tileset_rect( tileset_rect )
 		return nil
 	end
 	local cells = _.load_tileset_imagetable( tileset.imageTable_filename )
+	if not cells then
+		return nil
+	end
+	
 	local cell_width, cell_height = cells[1]:getSize()
 	local x_count = math.ceil( tileset_rect.w/cell_width )
 	local y_count = math.ceil( tileset_rect.h/cell_height )
@@ -595,6 +599,10 @@ function _.get_folder_table( path )
 	local string_index = 1
 	local folder
 
+	if not path then
+		return result
+	end
+
 	local found_start, found_end = string.find( path, delimiter, string_index)
 	while found_start do
 		folder = string.sub( path, string_index , found_start-1 )
@@ -615,6 +623,10 @@ function _.get_folder_table( path )
 end
 
 function _.convert_relative_folder( filepath )
+	if not filepath then
+		return nil
+	end
+
 	local ldtk_folder_end = #_ldtk_folder_table
 	local relative_path_start = 1
 
@@ -666,6 +678,10 @@ function _.load_tileset( level_name )
 end
 
 function _.load_tileset_imagetable(path, flipped)
+	if not path then
+		return
+	end
+
 	local id = path
 	if flipped then
 		id = id.."[flipped]"
