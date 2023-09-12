@@ -76,6 +76,10 @@ end
 
 ### Changelog
 
+#### version 1.04
+- Fix issue with fast loading that was not using the correct path
+- Add error message when the level lua file is not found when using fast loading
+
 #### version 1.03
 - Fix crash when the LDtk internal icons are used in a level
 

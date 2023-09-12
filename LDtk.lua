@@ -1,4 +1,4 @@
--- version 1.03
+-- version 1.04
 --
 -- Read levels made with LDtk level editor
 -- More information about LDtk: https://ldtk.io/
@@ -69,12 +69,15 @@ function LDtk.load( ldtk_file, use_lua_levels )
 	_ldtk_folder_table = _.get_folder_table( _ldtk_folder )
 	_ldtk_lua_folder = _ldtk_folder.._ldtk_lua_foldername
 
-	local lua_filename = _ldtk_lua_folder.._ldtk_filename..".pdz"
+	local lua_filename = _ldtk_lua_folder.."/".._ldtk_filename..".pdz"
 
 	-- check if we should load the lua files instead of the json files
 	_use_lua_levels = use_lua_levels
 	if _use_lua_levels then
-		_use_lua_levels = playdate.file.exists( lua_filename )
+		if not playdate.file.exists( lua_filename ) then
+			_use_lua_levels = false
+			print("LDtk Importer cannot load lua file (compiled as .pdz) because it does not exist.", lua_filename)
+		end
 	end
 
 	-- simply load the level from the precomputed lua file
@@ -662,7 +665,6 @@ function _.convert_relative_folder( filepath )
 		end
 	end
 
-	print(absolute_path)
 	return absolute_path
 end
 
