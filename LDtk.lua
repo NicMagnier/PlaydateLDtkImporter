@@ -72,6 +72,11 @@ local _ = {} -- for private functions
 --	false: will load .ldtk files (slower)
 --	nil: will load lua files if they exist
 function LDtk.load( ldtk_file, use_lua_levels )
+	if not ldtk_file then
+		error("LDtk Importer Error: LDtk.load() is called without a path to a ldtk file.")
+		return
+	end
+
 	_ldtk_filepath = ldtk_file
 	_ldtk_folder, _ldtk_filename = _.get_folder_and_filename( ldtk_file )
 	_ldtk_folder_table = _.get_folder_table( _ldtk_folder )
@@ -84,7 +89,7 @@ function LDtk.load( ldtk_file, use_lua_levels )
 	if _use_lua_levels then
 		if not playdate.file.exists( lua_filename ) then
 			_use_lua_levels = false
-			print("LDtk Importer cannot load lua file (compiled as .pdz) because it does not exist.", lua_filename)
+			print("LDtk Importer Error: cannot load lua file (compiled as .pdz) because it does not exist.", lua_filename)
 		end
 	end
 
@@ -109,6 +114,15 @@ function LDtk.load( ldtk_file, use_lua_levels )
 	end
 
 	local data = json.decodeFile(ldtk_file)
+	if not data then
+		if playdate.file.exists(ldtk_file) then
+			error("LDtk Importer Error: The LDtk file could not be decoded. Is it a valid LDtk file?")
+		else
+			print("LDtk Importer Error: The LDtk file does not exist. ", ldtk_file)
+		end
+
+		return
+	end
 
 	_use_external_files = data.externalLevels
 
@@ -207,7 +221,7 @@ end
 -- The files will be saved in the aave folder of the game (PlaydateSDK/Disk/Data)
 function LDtk.export_to_lua_files()
 	if _use_lua_levels then
-		print("LDtk, cannot export level in lua. The system had loaded lua files instead of .ldtk")
+		print("LDtk Importer Error: Cannot export level in lua. The system had loaded lua files instead of .ldtk")
 		return
 	end
 
@@ -220,7 +234,7 @@ function LDtk.export_to_lua_files()
 		lua_level_files[ level_name ] = _ldtk_lua_folder..filename..".pdz"
 	end
 
-	print("Export LDtk world")
+	print("LDtk Importer: Export LDtk world...")
 	_.export_lua_table( folder.._ldtk_filename..".lua", {
 		tilesets = _tilesets,
 		level_files = lua_level_files,
@@ -231,7 +245,7 @@ function LDtk.export_to_lua_files()
 	})
 
 	for level_name, level_file in pairs(_level_files) do
-		print("Export LDtk level", level_name)
+		print("LDtk Importer: Export LDtk level", level_name)
 
 		LDtk.load_level( level_name )
 		_.export_lua_table( folder.._.get_filename(level_file)..".lua", _levels[ level_name ])
@@ -393,7 +407,7 @@ end
 -- the tileset is also freed if no other level is using it
 function LDtk.release_level( level_name )
 	if not _use_external_files then
-		print("LDtk file doesn't use external files. No need to load/release individual levels.")
+		print("LDtk Importer Warning: file doesn't use external files. No need to load/release individual levels.")
 		return
 	end
 
@@ -577,7 +591,7 @@ function LDtk.generate_image_from_entity( entity )
 	end
 
 	if not entity.tileset_rect then
-		print("LDtk: Cannot generate entity image. No tileset assigned to it.")
+		print("LDtk Importer Error: Cannot generate entity image. No tileset assigned to it.")
 		return
 	end
 
@@ -654,7 +668,7 @@ function _.convert_relative_folder( filepath )
 	::skip_folders::
 
 	if ldtk_folder_end<0 then
-		error( "LDtk cannot access the following path because it is outside the project folder: "..filepath)
+		error( "LDtk Importer Error: Cannot access the following path because it is outside the project folder: "..filepath)
 	end
 
 	local absolute_path
@@ -714,9 +728,9 @@ function _.load_tileset_imagetable(path, flipped)
 	local image = playdate.graphics.imagetable.new(image_filepath)
 	if not image then
 		if flipped then
-			error( "LDtk cannot load tileset "..image_filepath..". Tileset requires a flipped version of the image: flipped-filename-table-w-h.png", 3)
+			error( "LDtk Importer Error: cannot load tileset "..image_filepath..". Tileset requires a flipped version of the image: flipped-filename-table-w-h.png", 3)
 		else
-			error( "LDtk cannot load tileset "..image_filepath..". Filename should have a image table format: name-table-w-h.png", 3)
+			error( "LDtk Importer Error: cannot load tileset "..image_filepath..". Filename should have a image table format: name-table-w-h.png", 3)
 		end
 
 		return nil
@@ -739,7 +753,7 @@ function _.release_tileset_imagetable(path, flipped)
 	end
 
 	if not _imageTables[id] then
-		print("LDtk: We release an image that was not loaded. Strange...")
+		print("LDtk Importer Warning: We release an image that was not loaded. Strange...")
 		return
 	end
 
@@ -780,11 +794,11 @@ function _.export_lua_table( filepath, table_to_export )
 		return pairs_count==#t
 	end
 
-	assert( filepath, "LDtk Importer export_lua_table(), filepath required")
-	assert( table_to_export, "LDtk Importer export_lua_table(), table_to_export required")
+	assert( filepath, "LDtk Importer Assert: export_lua_table(), filepath required")
+	assert( table_to_export, "LDtk Importer Assert: export_lua_table(), table_to_export required")
 
 	local file, file_error = playdate.file.open(filepath, playdate.file.kFileWrite)
-	assert(file, "LDtk Importer export_lua_table(), Cannot open file",filepath," (",file_error,")")
+	assert(file, "LDtk Importer Assert: export_lua_table(), Cannot open file",filepath," (",file_error,")")
 
 	local _write_entry
 	_write_entry = function( entry, name )
