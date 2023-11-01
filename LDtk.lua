@@ -231,7 +231,7 @@ function LDtk.export_to_lua_files()
 	local lua_level_files = {}
 	for level_name, level_file in pairs(_level_files) do
 		local filename = _.get_filename(level_file)
-		lua_level_files[ level_name ] = _ldtk_lua_folder..filename..".pdz"
+		lua_level_files[ level_name ] = _ldtk_lua_folder.."/"..filename..".pdz"
 	end
 
 	print("LDtk Importer: Export LDtk world...")
@@ -286,8 +286,8 @@ function LDtk.load_level( level_name )
 	end
 
 	-- load level's custom fields
+	level.custom_data = {}
 	for index, field_data in ipairs(level_data.fieldInstances) do
-		level.custom_data = {}
 		level.custom_data[ field_data.__identifier ] = field_data.__value
 	end
 
@@ -545,6 +545,10 @@ function LDtk.get_layers(level_name)
 	return level.layers
 end
 
+-- return the name of a level bsed on their Strind IID
+function LDtk.get_level_name(levelIid)
+	return _level_names[levelIid]
+end
 
 -- Generate an image from a section of a tileset
 -- https://ldtk.io/json/#ldtk-TilesetRect
