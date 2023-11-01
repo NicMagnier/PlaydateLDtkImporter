@@ -272,8 +272,8 @@ function LDtk.load_level( level_name )
 	end
 
 	-- load level's custom fields
+	level.custom_data = {}
 	for index, field_data in ipairs(level_data.fieldInstances) do
-		level.custom_data = {}
 		level.custom_data[ field_data.__identifier ] = field_data.__value
 	end
 
