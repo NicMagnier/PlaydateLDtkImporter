@@ -523,9 +523,9 @@ function LDtk.get_layers(level_name)
 	return level.layers
 end
 
--- return a layer name given a uid
-function LDtk.get_level_name(level_uid)
-	return _level_names[level_uid]
+-- return the name of a level bsed on their Strind IID
+function LDtk.get_level_name(levelIid)
+	return _level_names[levelIid]
 end
 
 -- Generate an image from a section of a tileset
