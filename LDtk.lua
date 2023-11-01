@@ -217,7 +217,7 @@ function LDtk.export_to_lua_files()
 	local lua_level_files = {}
 	for level_name, level_file in pairs(_level_files) do
 		local filename = _.get_filename(level_file)
-		lua_level_files[ level_name ] = _ldtk_lua_folder..filename..".pdz"
+		lua_level_files[ level_name ] = _ldtk_lua_folder.."/"..filename..".pdz"
 	end
 
 	print("Export LDtk world")
