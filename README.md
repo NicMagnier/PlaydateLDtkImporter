@@ -76,6 +76,13 @@ end
 
 ### Changelog
 
+#### version 1.05
+- Improve error reporting
+- Added MIT License to the project
+- Add new function to get the level name from IID (Thx GammaGames)
+- Fix path bug when exporting level (Thx zukas3)
+- Fix loading of custom data (Thx GammaGames)
+
 #### version 1.04
 - Fix issue with fast loading that was not using the correct path
 - Add error message when the level lua file is not found when using fast loading
