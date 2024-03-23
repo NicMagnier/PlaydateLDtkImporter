@@ -5,7 +5,7 @@
 		"doc": "https://ldtk.io/json",
 		"schema": "https://ldtk.io/files/JSON_SCHEMA.json",
 		"appAuthor": "Sebastien 'deepnight' Benard",
-		"appVersion": "1.3.3",
+		"appVersion": "1.5.3",
 		"url": "https://ldtk.io"
 	},
 	"identifier": "Level_1",
@@ -64,7 +64,9 @@
 					"height": 32,
 					"defUid": 2,
 					"px": [212,128],
-					"fieldInstances": [{ "__identifier": "EntranceDirection", "__type": "LocalEnum.EntranceDirection", "__value": null, "__tile": null, "defUid": 51, "realEditorValues": [] }]
+					"fieldInstances": [{ "__identifier": "EntranceDirection", "__type": "LocalEnum.EntranceDirection", "__value": null, "__tile": null, "defUid": 51, "realEditorValues": [] }],
+					"__worldX": 612,
+					"__worldY": 40
 				},
 				{
 					"__identifier": "Player",
@@ -81,7 +83,9 @@
 					"fieldInstances": [{ "__identifier": "EntranceDirection", "__type": "LocalEnum.EntranceDirection", "__value": "East", "__tile": null, "defUid": 51, "realEditorValues": [{
 						"id": "V_String",
 						"params": ["East"]
-					}] }]
+					}] }],
+					"__worldX": 420,
+					"__worldY": 136
 				}
 			]
 		},

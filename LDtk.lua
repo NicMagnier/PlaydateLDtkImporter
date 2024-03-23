@@ -385,16 +385,23 @@ function LDtk.load_level( level_name )
 					properties[ field_data.__identifier ] = field_data.__value
 				end
 
+				local world_position
+				if entity_data.__worldX and entity_data.__worldY then
+					world_position = { x=entity_data.__worldX, y=entity_data.__worldY }
+				end
+
 				table.insert( layer.entities, {
 					name = entity_data.__identifier,
 					iid = entity_data.iid,
 					tileset_rect = entity_data.__tile,
 					position = { x=entity_data.px[1], y=entity_data.px[2] },
+					world_position = world_position,
 					center = { x=entity_data.__pivot[1], y=entity_data.__pivot[2] },
 					size = { width=entity_data.width, height=entity_data.height },
 					zIndex = layer.zIndex,
 					fields = properties,
 				})
+
 			end
 		end
 	end

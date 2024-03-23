@@ -5,7 +5,7 @@
 		"doc": "https://ldtk.io/json",
 		"schema": "https://ldtk.io/files/JSON_SCHEMA.json",
 		"appAuthor": "Sebastien 'deepnight' Benard",
-		"appVersion": "1.3.3",
+		"appVersion": "1.5.3",
 		"url": "https://ldtk.io"
 	},
 	"identifier": "Level_0",
@@ -64,7 +64,9 @@
 					"height": 32,
 					"defUid": 2,
 					"px": [64,144],
-					"fieldInstances": [{ "__identifier": "EntranceDirection", "__type": "LocalEnum.EntranceDirection", "__value": null, "__tile": null, "defUid": 51, "realEditorValues": [] }]
+					"fieldInstances": [{ "__identifier": "EntranceDirection", "__type": "LocalEnum.EntranceDirection", "__value": null, "__tile": null, "defUid": 51, "realEditorValues": [] }],
+					"__worldX": 64,
+					"__worldY": 144
 				},
 				{
 					"__identifier": "Player",
@@ -81,7 +83,9 @@
 					"fieldInstances": [{ "__identifier": "EntranceDirection", "__type": "LocalEnum.EntranceDirection", "__value": "West", "__tile": null, "defUid": 51, "realEditorValues": [{
 						"id": "V_String",
 						"params": ["West"]
-					}] }]
+					}] }],
+					"__worldX": 380,
+					"__worldY": 136
 				},
 				{
 					"__identifier": "Mushroom",
@@ -95,7 +99,9 @@
 					"height": 8,
 					"defUid": 54,
 					"px": [76,56],
-					"fieldInstances": []
+					"fieldInstances": [],
+					"__worldX": 76,
+					"__worldY": 56
 				},
 				{
 					"__identifier": "Mushroom",
@@ -109,7 +115,9 @@
 					"height": 8,
 					"defUid": 54,
 					"px": [78,47],
-					"fieldInstances": []
+					"fieldInstances": [],
+					"__worldX": 78,
+					"__worldY": 47
 				},
 				{
 					"__identifier": "Mushroom",
@@ -123,7 +131,9 @@
 					"height": 8,
 					"defUid": 54,
 					"px": [77,38],
-					"fieldInstances": []
+					"fieldInstances": [],
+					"__worldX": 77,
+					"__worldY": 38
 				},
 				{
 					"__identifier": "Mushroom",
@@ -137,7 +147,9 @@
 					"height": 8,
 					"defUid": 54,
 					"px": [75,29],
-					"fieldInstances": []
+					"fieldInstances": [],
+					"__worldX": 75,
+					"__worldY": 29
 				}
 			]
 		},
