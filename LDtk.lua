@@ -212,7 +212,6 @@ function LDtk.load( ldtk_file, use_lua_levels )
 			_level_files[ level_data.identifier ] = _.convert_relative_folder( level_data.externalRelPath )
 		else
 			LDtk.load_level( level_data )
-			_.load_tileset( level_data.identifier )
 		end
 	end
 end
