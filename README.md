@@ -76,6 +76,10 @@ end
 
 ### Changelog
 
+#### version 1.06
+- add property world_positon to entities (LDtk version 1.5.0)
+- add new neighbours option (back, front, northwest, northeast, southwest, southeast) (Thx jojomo96)
+
 #### version 1.05
 - Improve error reporting
 - Added MIT License to the project

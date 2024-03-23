@@ -1,4 +1,4 @@
--- version 1.05
+-- version 1.06
 --
 -- Copyright 2022-2023 Nic Magnier
 -- 
@@ -275,14 +275,26 @@ function LDtk.load_level( level_name )
 	local level = {}
 	_levels[ level_data.identifier ] = level
 
-	level.neighbours = { east = {}, west = {}, north = {}, south = {}, up = {}, down = {} }
-    	local direction_table = { e = "east", w = "west", n = "north", s = "south", [">"] = "up", ["<"] = "down" }
-    	for index, neighbour_data in ipairs(level_data.__neighbours) do
-        	local direction = direction_table[neighbour_data.dir]
-       		if direction then
-           		table.insert(level.neighbours[direction], _level_names[neighbour_data.levelIid])
-        	end
+	level.neighbours = { east = {}, west = {}, north = {}, south = {}, back = {}, front = {}, northwest = {}, northeast = {}, southwest = {}, southeast = {} }
+	local direction_table = {
+		e = "east",
+		w = "west",
+		n = "north",
+		s = "south",
+		[">"] = "back",
+		["<"] = "front",
+		nw = "northwest",
+		ne = "northeast",
+		sw = "southwest",
+		se = "southeast"
+	}
+
+	for index, neighbour_data in ipairs(level_data.__neighbours) do
+    	local direction = direction_table[neighbour_data.dir]
+   		if direction then
+       		table.insert(level.neighbours[direction], _level_names[neighbour_data.levelIid])
     	end
+	end
 
 	-- load level's custom fields
 	level.custom_data = {}
@@ -472,7 +484,7 @@ function LDtk.create_tilemap( level_name, layer_name )
 end
 
 -- return a table with all the adjacent levels
--- @direction is optional: values can be "east", "west", "north", "south", "up", "down"
+-- @direction is optional: values can be "east", "west", "north", "south", "back", "front", "northwest", "northeast", "southwest", "southeast"
 function LDtk.get_neighbours( level_name, direction )
 	local level = _levels[level_name]
 	if not level then return end
