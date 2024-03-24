@@ -738,33 +738,89 @@ function _.load_tileset_imagetable(path, flipped)
 		return _imageTables[id].image
 	end
 
-	local image_filepath
+	local imagetable_filepath = path
 	if flipped then
 		local filename = path:match("^.+/(.+)$")
 		local tileset_folder = path:sub(0, -#filename-1)
-		image_filepath = tileset_folder.."flipped-"..filename
-	else
-		image_filepath = path
+		imagetable_filepath = tileset_folder.."flipped-"..filename
 	end
 
-	local image = playdate.graphics.imagetable.new(image_filepath)
-	if not image then
+	local imagetable = playdate.graphics.imagetable.new( imagetable_filepath )
+	if not imagetable then
 		if flipped then
-			error( "LDtk Importer Error: cannot load tileset "..image_filepath..". Tileset requires a flipped version of the image: flipped-filename-table-w-h.png", 3)
+			error( "LDtk Importer Error: cannot load tileset "..imagetable_filepath..". Tileset requires a flipped version of the image: flipped-filename-table-w-h.png", 3)
 		else
-			error( "LDtk Importer Error: cannot load tileset "..image_filepath..". Filename should have a image table format: name-table-w-h.png", 3)
+			error( "LDtk Importer Error: cannot load tileset "..imagetable_filepath..". Filename should have a image table format: name-table-w-h.png", 3)
 		end
 
 		return nil
 	end
 
+	-- generate a flipped version of the tileset
+	if flipped then
+		local tw, th = imagetable:getSize()
+		local gtw, gth = tw*2, th*2
+
+		-- !!!crash here when we try to allocate the new imagetable
+		local flipped_imagetable = playdate.graphics.imagetable.new( gtw*gth )
+
+		-- local generate_flipped_tile = function( img, x, y, flip)
+		-- 	local tile_index = _.get_flipped_imagetable_index(x, y, tw, th, flip)
+		-- 	local flipped_tile = playdate.graphics.image.new( img:getSize()) 
+
+		-- 	playdate.graphics.pushContext(flipped_tile)
+		-- 		img:draw( 0, 0, flip)
+		-- 	playdate.graphics.popContext()
+		-- 	flipped_imagetable[tile_index] = flipped_tile
+		-- end
+
+--		generate_flipped_tile( imagetable:getImage(1,1), 1, 1, playdate.graphics.kImageUnflipped)
+		-- generate_flipped_tile( tile_image, tx, ty, playdate.graphics.kImageFlippedX)
+		-- generate_flipped_tile( tile_image, tx, ty, playdate.graphics.kImageFlippedY)
+		-- generate_flipped_tile( tile_image, tx, ty, playdate.graphics.kImageFlippedXY)
+
+		-- for ty = 1, th do
+		-- 	for tx = 1, tw do
+		-- 		local tile_image = imagetable:getImage(tx,ty)
+
+		-- 		generate_flipped_tile( tile_image, tx, ty, playdate.graphics.kImageUnflipped)
+		-- 		generate_flipped_tile( tile_image, tx, ty, playdate.graphics.kImageFlippedX)
+		-- 		generate_flipped_tile( tile_image, tx, ty, playdate.graphics.kImageFlippedY)
+		-- 		generate_flipped_tile( tile_image, tx, ty, playdate.graphics.kImageFlippedXY)
+		-- 	end
+		-- end
+
+	end
+
 	_imageTables[id] = {
 		count = 1,
-		image = image
+		image = imagetable
 	}
 
-	return image
+	return imagetable
 end
+
+-- get the index in the image tabel for a flipped tile
+function _.get_flipped_imagetable_index(x, y, w, h, flip_style)
+	w = w*2
+	h = h*2
+
+	if flip_style==playdate.graphics.kImageFlippedX then
+		return 1 + y*w + (w-x-1)
+	end
+
+	if flip_style==playdate.graphics.kImageFlippedY then
+		return 1 + (h-y-1)*w + x
+	end
+
+	if flip_style==playdate.graphics.kImageFlippedXY then
+		return 1 + (h-y-1)*w + (w-x-1)
+	end
+
+	-- no flip
+	return 1 + y*w + x
+end
+
 
 function _.release_tileset_imagetable(path, flipped)
 	if not path then return end
