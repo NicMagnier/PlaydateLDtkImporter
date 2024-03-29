@@ -76,6 +76,9 @@ end
 
 ### Changelog
 
+#### version 1.07
+- Fix bug introduced in 1.06 where tileset would not load + code cleanup (Thank SquidGoDev)
+
 #### version 1.06
 - add property world_positon to entities (LDtk version 1.5.0)
 - add new neighbours option (back, front, northwest, northeast, southwest, southeast) (Thx jojomo96)

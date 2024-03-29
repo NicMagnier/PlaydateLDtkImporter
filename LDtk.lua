@@ -1,4 +1,4 @@
--- version 1.06
+-- version 1.07
 --
 -- Copyright 2022-2023 Nic Magnier
 -- 
@@ -208,10 +208,13 @@ function LDtk.load( ldtk_file, use_lua_levels )
 
 	-- we load the levels
 	for level_index, level_data in ipairs(data.levels) do
+		local level_name = level_data.identifier
+
 		if level_data.externalRelPath then
-			_level_files[ level_data.identifier ] = _.convert_relative_folder( level_data.externalRelPath )
+			_level_files[ level_name ] = _.convert_relative_folder( level_data.externalRelPath )
 		else
-			LDtk.load_level( level_data )
+			_levels[ level_name ] = _.process_level_data( level_data )
+			_.load_tileset( level_name )
 		end
 	end
 end
@@ -255,167 +258,16 @@ end
 -- load the level in memory
 -- only necessary to call if the ldtk file is saved in multiple files
 function LDtk.load_level( level_name )
+	-- check if the level was already loaded
 	if _levels[ level_name ] then
 		return
 	end
 
+	-- load the level as recompiled lua file or the ldtk json file
 	if _use_lua_levels then
 		_levels[ level_name ] = playdate.file.run( _level_files[ level_name ] )
-		_.load_tileset( level_name )
-		return
-	end
-
-	local level_data
-	if type(level_name)=="string" then
-		level_data = json.decodeFile( _level_files[ level_name ] )
 	else
-		level_data = level_name
-	end
-
-	local level = {}
-	_levels[ level_data.identifier ] = level
-
-	level.neighbours = { east = {}, west = {}, north = {}, south = {}, back = {}, front = {}, northwest = {}, northeast = {}, southwest = {}, southeast = {} }
-	local direction_table = {
-		e = "east",
-		w = "west",
-		n = "north",
-		s = "south",
-		[">"] = "back",
-		["<"] = "front",
-		nw = "northwest",
-		ne = "northeast",
-		sw = "southwest",
-		se = "southeast"
-	}
-
-	for index, neighbour_data in ipairs(level_data.__neighbours) do
-    	local direction = direction_table[neighbour_data.dir]
-   		if direction then
-       		table.insert(level.neighbours[direction], _level_names[neighbour_data.levelIid])
-    	end
-	end
-
-	-- load level's custom fields
-	level.custom_data = {}
-	for index, field_data in ipairs(level_data.fieldInstances) do
-		level.custom_data[ field_data.__identifier ] = field_data.__value
-	end
-
-	-- handle layers
-	level.layers = {}
-	local layer_count = #level_data.layerInstances
-	for layer_index, layer_data in ipairs(level_data.layerInstances) do
-
-		local layer = {}
-		level.layers[ layer_data.__identifier ] = layer
-
-		local layer_type = layer_data.__type
-
-		layer.grid_size = layer_data.__gridSize
-		layer.zIndex = layer_count - layer_index
-		layer.rect = {
-			x = level_data.worldX + layer_data.__pxTotalOffsetX,
-			y = level_data.worldY + layer_data.__pxTotalOffsetY,
-			width = layer_data.__cWid * layer_data.__gridSize,
-			height = layer_data.__cHei * layer_data.__gridSize
-			}
-
-		-- load tileset
-		if layer_data.__tilesetRelPath then
-			layer.tileset_file = _.convert_relative_folder( layer_data.__tilesetRelPath )
-		end
-		layer.has_flipped_tiles = false
-
-		-- handle tiles
-		local tiles_data = layer_data.gridTiles
-		if #layer_data.autoLayerTiles>0 then
-			tiles_data = layer_data.autoLayerTiles
-		end
-		if #tiles_data>0 then
-			layer.tilemap_width = layer_data.__cWid
-			layer.tileset_uid = layer_data.__tilesetDefUid
-
-			layer.tiles = {}
-
-			local gsize = layer.grid_size
-			local tileset_data = _tilesets[ layer.tileset_uid ]
-			local cw, ch = tileset_data.imageWidth/gsize, tileset_data.imageHeight/gsize
-
-			-- check we we have any flipped tiles
-			for tile_index, tile_data in ipairs(tiles_data) do
-				if tile_data.f~=0 then
-					layer.has_flipped_tiles = true
-					cw = cw * 2
-					ch = ch * 2
-					goto finish_flip_search
-				end
-			end
-			::finish_flip_search::
-
-			local tiles_list = {}
-			for tile_index, tile_data in ipairs(tiles_data) do
-				local id = (tile_data.px[2]/gsize)*layer_data.__cWid + tile_data.px[1]/gsize
-
-				if layer.has_flipped_tiles then
-					local cx, cy = tile_data.src[1]/gsize, tile_data.src[2]/gsize
-
-					if tile_data.f==0 then
-						tiles_list[id] = 1 + cy*cw + cx
-					elseif tile_data.f==1 then
-						tiles_list[id] = 1 + cy*cw + (cw-cx-1)
-					elseif tile_data.f==2 then
-						tiles_list[id] = 1 + (ch-cy-1)*cw + cx
-					else
-						tiles_list[id] = 1 + (ch-cy-1)*cw + (cw-cx-1)
-					end
-				else
-					tiles_list[id] = 1 + tile_data.t
-				end
-			end
-
-			for y = 0, layer_data.__cHei-1 do
-				for x = 0, layer_data.__cWid-1 do
-					local id = y*layer_data.__cWid + x
-
-					if tiles_list[id] then
-						table.insert( layer.tiles, math.floor(tiles_list[id]) )
-					else
-						table.insert( layer.tiles, 0 )
-					end
-				end
-			end
-		end
-
-		local entities_data = layer_data.entityInstances
-		if #entities_data>0 then
-			layer.entities = {}
-
-			for entity_index, entity_data in ipairs(entities_data) do
-				local properties = {}
-				for field_index, field_data in ipairs(entity_data.fieldInstances) do
-					properties[ field_data.__identifier ] = field_data.__value
-				end
-
-				local world_position
-				if entity_data.__worldX and entity_data.__worldY then
-					world_position = { x=entity_data.__worldX, y=entity_data.__worldY }
-				end
-
-				table.insert( layer.entities, {
-					name = entity_data.__identifier,
-					iid = entity_data.iid,
-					tileset_rect = entity_data.__tile,
-					position = { x=entity_data.px[1], y=entity_data.px[2] },
-					world_position = world_position,
-					center = { x=entity_data.__pivot[1], y=entity_data.__pivot[2] },
-					size = { width=entity_data.width, height=entity_data.height },
-					zIndex = layer.zIndex,
-					fields = properties,
-				})
-
-			end
-		end
+		_levels[ level_name ] = _.process_level_data( json.decodeFile( _level_files[ level_name ] ) )
 	end
 
 	_.load_tileset( level_name )
@@ -710,6 +562,159 @@ function _.convert_relative_folder( filepath )
 	end
 
 	return absolute_path
+end
+
+function _.process_level_data( level_data )
+	if not level_data then return end
+	if not level_data.identifier then return end
+
+	local level = {}
+
+	-- set neighbours information
+	level.neighbours = { east = {}, west = {}, north = {}, south = {}, back = {}, front = {}, northwest = {}, northeast = {}, southwest = {}, southeast = {} }
+	local direction_table = {
+		e = "east",
+		w = "west",
+		n = "north",
+		s = "south",
+		[">"] = "back",
+		["<"] = "front",
+		nw = "northwest",
+		ne = "northeast",
+		sw = "southwest",
+		se = "southeast"
+	}
+
+	for index, neighbour_data in ipairs(level_data.__neighbours) do
+    	local direction = direction_table[neighbour_data.dir]
+   		if direction then
+       		table.insert(level.neighbours[direction], _level_names[neighbour_data.levelIid])
+    	end
+	end
+
+	-- load level's custom fields
+	level.custom_data = {}
+	for index, field_data in ipairs(level_data.fieldInstances) do
+		level.custom_data[ field_data.__identifier ] = field_data.__value
+	end
+
+	-- handle layers
+	level.layers = {}
+	local layer_count = #level_data.layerInstances
+	for layer_index, layer_data in ipairs(level_data.layerInstances) do
+
+		local layer = {}
+		level.layers[ layer_data.__identifier ] = layer
+
+		local layer_type = layer_data.__type
+
+		layer.grid_size = layer_data.__gridSize
+		layer.zIndex = layer_count - layer_index
+		layer.rect = {
+			x = level_data.worldX + layer_data.__pxTotalOffsetX,
+			y = level_data.worldY + layer_data.__pxTotalOffsetY,
+			width = layer_data.__cWid * layer_data.__gridSize,
+			height = layer_data.__cHei * layer_data.__gridSize
+			}
+
+		-- load tileset
+		if layer_data.__tilesetRelPath then
+			layer.tileset_file = _.convert_relative_folder( layer_data.__tilesetRelPath )
+		end
+		layer.has_flipped_tiles = false
+
+		-- handle tiles
+		local tiles_data = layer_data.gridTiles
+		if #layer_data.autoLayerTiles>0 then
+			tiles_data = layer_data.autoLayerTiles
+		end
+		if #tiles_data>0 then
+			layer.tilemap_width = layer_data.__cWid
+			layer.tileset_uid = layer_data.__tilesetDefUid
+
+			layer.tiles = {}
+
+			local gsize = layer.grid_size
+			local tileset_data = _tilesets[ layer.tileset_uid ]
+			local cw, ch = tileset_data.imageWidth/gsize, tileset_data.imageHeight/gsize
+
+			-- check we we have any flipped tiles
+			for tile_index, tile_data in ipairs(tiles_data) do
+				if tile_data.f~=0 then
+					layer.has_flipped_tiles = true
+					cw = cw * 2
+					ch = ch * 2
+					goto finish_flip_search
+				end
+			end
+			::finish_flip_search::
+
+			local tiles_list = {}
+			for tile_index, tile_data in ipairs(tiles_data) do
+				local id = (tile_data.px[2]/gsize)*layer_data.__cWid + tile_data.px[1]/gsize
+
+				if layer.has_flipped_tiles then
+					local cx, cy = tile_data.src[1]/gsize, tile_data.src[2]/gsize
+
+					if tile_data.f==0 then
+						tiles_list[id] = 1 + cy*cw + cx
+					elseif tile_data.f==1 then
+						tiles_list[id] = 1 + cy*cw + (cw-cx-1)
+					elseif tile_data.f==2 then
+						tiles_list[id] = 1 + (ch-cy-1)*cw + cx
+					else
+						tiles_list[id] = 1 + (ch-cy-1)*cw + (cw-cx-1)
+					end
+				else
+					tiles_list[id] = 1 + tile_data.t
+				end
+			end
+
+			for y = 0, layer_data.__cHei-1 do
+				for x = 0, layer_data.__cWid-1 do
+					local id = y*layer_data.__cWid + x
+
+					if tiles_list[id] then
+						table.insert( layer.tiles, math.floor(tiles_list[id]) )
+					else
+						table.insert( layer.tiles, 0 )
+					end
+				end
+			end
+		end
+
+		local entities_data = layer_data.entityInstances
+		if #entities_data>0 then
+			layer.entities = {}
+
+			for entity_index, entity_data in ipairs(entities_data) do
+				local properties = {}
+				for field_index, field_data in ipairs(entity_data.fieldInstances) do
+					properties[ field_data.__identifier ] = field_data.__value
+				end
+
+				local world_position
+				if entity_data.__worldX and entity_data.__worldY then
+					world_position = { x=entity_data.__worldX, y=entity_data.__worldY }
+				end
+
+				table.insert( layer.entities, {
+					name = entity_data.__identifier,
+					iid = entity_data.iid,
+					tileset_rect = entity_data.__tile,
+					position = { x=entity_data.px[1], y=entity_data.px[2] },
+					world_position = world_position,
+					center = { x=entity_data.__pivot[1], y=entity_data.__pivot[2] },
+					size = { width=entity_data.width, height=entity_data.height },
+					zIndex = layer.zIndex,
+					fields = properties,
+				})
+
+			end
+		end
+	end
+
+	return level
 end
 
 function _.load_tileset( level_name )
